@@ -1,0 +1,433 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+@import url(http://fonts.googleapis.com/css?family=Shadows+Into+Light);
+
+@import "css/mixins.less";
+@import "css/normalize.less";
+
+/* _________________________________________________
+
+320 and Up boilerplate extension
+Andy Clarke http://about.me/malarkey
+Keith Clark 
+Version: 2
+URL: http://stuffandnonsense.co.uk/projects/320andup/
+License: http://creativecommons.org/licenses/MIT/
+_____________________________________________________ */
+ html {
+    overflow-y : scroll;
+    background-color: #d9d9d9;
+}
+body {
+    margin : 0 auto;
+    padding : 0;
+    width : 98%
+    /* 252px */
+    ;
+    font : 100%/1.4 Cambria, Georgia, Times, "Times New Roman";
+    color : rgb(40, 40, 40);
+    background-color : transparent;
+}
+button, input, select, textarea {
+    font-family :"Helvetica Neue", Helvetica, Arial, sans-serif;
+    color : rgb(40, 40, 40);
+}
+.light {
+    margin : 0 auto;
+    position: fixed;
+    left: 50%;
+    margin-left: -300px;
+    display: inline;
+    width: 600px;
+    height: 400px;
+    z-index: -100;
+    /*border: 1px solid black;*/
+    background-image: -moz-radial-gradient(50% 50%, ellipse farthest-side, rgba(245, 245, 245, 1.0) 20%, rgba(217, 217, 217, 0) 100%);
+    background-image: -webkit-radial-gradient(50% 50%, ellipse farthest-side, rgba(245, 245, 245, 1.0) 20%, rgba(217, 217, 217, 0) 100%);
+    background-image: -o-radial-gradient(50% 50%, ellipse farthest-side, rgba(245, 245, 245, 1.0) 20%, rgba(217, 217, 217, 0) 100%);
+    background-image: -ms-radial-gradient(50% 50%, ellipse farthest-side, rgba(245, 245, 245, 1.0) 20%, rgba(217, 217, 217, 0) 100%);
+    background-image: radial-gradient(50% 50%, ellipse farthest-side, rgba(245, 245, 245, 1.0) 20%, rgba(217, 217, 217, 0) 100%);
+}
+#l1 {
+    margin-left: -400px;
+}
+#l2 {
+    margin-top: -75px;
+}
+#l3 {
+    margin-left: -275px;
+    margin-top: 50px;
+}
+/* 2. HEADINGS (320 and Up typography defaults) ==================================================== */
+ h1, h2, h3, h4, h5, h6 {
+    font-family :"Helvetica Neue", Helvetica, Arial;
+    font-weight : bold;
+}
+h1 {
+    margin-bottom : .75em;
+    font-size : 3em;
+    /* 48 / 16 = 3 */
+    line-height : 1.2;
+}
+h2 {
+    margin-bottom : .75em;
+    font-size : 2em;
+    /* 36 / 16 = 2 */
+    line-height : 1.2;
+}
+/* 3. TYPOGRAPHY (320 and Up typography defaults) ============================================================================= */
+/* 4.LINKS ============================================================================= */
+ a {
+    color : rgb(23, 119, 175);
+    
+    &:visited {
+        color : rgb(40, 40, 40);
+    }
+    &:focus {
+        outline : thin dotted;
+        color : rgb(0, 0, 0);
+    }
+    &:hover, a:active {
+        outline : 0;
+    }
+}
+
+/* 5.FIGURES & IMAGES ============================================================================= */
+
+/* 6.TABLES ============================================================================= */
+
+/* 7.FORMS ============================================================================= */
+
+/* Colors for form validity */
+ input:valid, textarea:valid {
+    /* Styles */
+}
+input:invalid, textarea:invalid {
+    -webkit-box-shadow : 0 0 2px rgb(255, 0, 0);
+    -moz-box-shadow : 0 0 2px rgb(255, 0, 0);
+    box-shadow : 0 0 2px rgb(255, 0, 0);
+}
+.no-boxshadow input:invalid, .no-boxshadow textarea:invalid {
+    background-color : rgb(240, 221, 221);
+}
+/* 8 BANNER 		============================================================================= */
+
+/* 9 NAVIGATION 	============================================================================= */
+
+/* 10 CONTENT 		============================================================================= */
+ .roundbutton {
+    width: 71px;
+    height: 71px;
+    border: 0px solid transparent;
+    background-color: transparent;
+}
+.right {
+    background-image: url('img/right_arrow.png');
+    .right:hover {
+        background-image: url('img/right_arrow_accent.png');
+    }
+}
+
+.left {
+    width: 43px;
+    height: 43px;
+    background-image: url('img/left_arrow.png');
+    background-repeat: no-repeat;
+    
+    .left:hover {
+        background-image: url('img/left_arrow_accent.png');
+    }
+}
+
+.right_accent {
+    background-image: url('img/right_arrow_accent.png');
+}
+header[role="banner"] {
+    margin: 0px auto;
+    width: 400px;
+    text-align: center;
+    
+    h1 {
+        color: rgba(102, 102, 102, 1.0);
+        text-shadow: 0px 3px 2px rgba(102, 102, 102, 1.0);
+        letter-spacing: 0.2em;
+        font-family:"Open Sans", Arial, sans-serif;
+        font-weight: 600;
+        
+        span {
+            color: rgba(247, 147, 30, 1.0);
+        }
+    }
+}
+
+div[role="main"] {
+    position: relative;
+    margin: 0px auto;
+    width: 400px;
+}
+#startup {
+    position: absolute;
+    text-align: center;
+    height: 100%;
+    margin-left: -200px;
+    left: 50%;
+    width: 400px;
+    top: 0px;
+    
+    .mode {
+        margin-top: 20px;
+        font-size: 30px;
+        position: relative;
+        
+        div {
+            width: 250px;
+            font-size: 40px;
+            text-align: right;
+        }
+        
+        span {
+            width: 250px;
+            display: block;
+            margin-top: 0px;
+            font-size: 20px;
+            font-style: italic;
+            text-align: right;
+            color: rgb(139, 139, 139);
+        }
+        
+        input[type="button"] {
+            position: absolute;
+            left: 270px;
+            top: 5px;
+        }
+    }
+}
+
+#progress {
+    position: absolute;
+    top: 5px;
+    height: 264px;
+    
+    #questions, #timer {
+        float: left;
+        width: 20px;
+        margin: 8px auto;
+    }
+    
+    #questions {
+        .current {
+            background-color: rgba(247, 147, 30, 1);
+            width: 10px;
+            height: 10px;
+            margin: -4px auto;
+            border: 2px solid rgb(153, 153, 153);
+            z-index: 10;
+        }
+        
+        .correct { background-color: rgba(0, 128, 0, 0.65); }
+        .incorrect { background-color: rgba(200, 0, 0, 0.65); }
+    }
+    
+    .next { background-color: rgba(200, 200, 200, 0.65); }
+    
+    #timer {
+        width: 12px;
+        height: 100%;
+        border: 2px solid rgb(153, 153, 153);
+        background-color: rgb(230, 230, 230);
+    }
+}
+
+.correct, .incorrect, .current, .next {
+    width: 8px;
+    height: 8px;
+    margin: 1px auto;
+    position: relative;
+    z-index: 1;
+}
+
+
+#elapsed {
+    margin: 1px;
+    height: 50%;
+    background-color: rgba(247, 147, 30, 0.51);
+}
+
+.question {
+    position: relative;
+    /* using visibility causes issues with the transform transitions in safari*/
+    width: 100%;
+    
+    & > hr {
+        position: relative;
+        top: -10px;
+        width: 130px;
+        margin: 0 auto;
+    }
+}
+#problemContainer {
+    margin: 0 auto;
+    width: 130px;
+    height: 180px;
+    position: relative;
+}
+
+.problem {
+    width: 130px;
+    position: absolute;
+    .transition(all 0.5s ease-in-out);
+    -webkit-transform: skewx(-30deg) translatex(-150px);
+    -ms-transform: skewx(-30deg) translatex(-150px);
+    transform: skewx(-30deg) translatex(-150px);
+    opacity: 0;
+    
+    &.active {
+       -webkit-transform: skewx(0deg) translatex(0px);
+      -ms-transform: skewx(0deg) translatex(0px);
+      transform: skewx(0deg) translatex(0px);
+      opacity: 1;
+    }
+}
+
+.problemOut {
+    -webkit-transform: skewx(30deg) translatex(150px);
+    -ms-transform: skewx(30deg) translatex(150px);
+    transform: skewx(30deg) translatex(150px);
+}
+.num1, .num2, .operator {
+    font-size: 4em;
+    text-align:right;
+}
+.num2 {
+    float:right;
+}
+.operator {
+    margin-right: 10px;
+}
+.response {
+    display: block;
+    margin: 2px auto 1em auto;
+    width: 130px;
+    text-align: center;
+    font-family:'Shadows Into Light', cursive;
+    font-size: 5em;
+    letter-spacing: 0.15em;
+    background: white;
+    border-top: 1px black solid;
+    box-shadow: 0px 0px 9px #333333;
+}
+.submit {
+    visibility: hidden;
+    position: absolute;
+    right: 40px;
+    top: 212px;
+}
+#next {
+    display: none;
+}
+#results {
+    position: absolute;
+    text-align: center;
+    height: 100%;
+    margin-left: -100px;
+    left: 50%;
+    width: 200px;
+    height: 180px;
+    top: 50px;
+    box-shadow: 0px 0px 80px #333333;
+    border-radius: 5px;
+    background-color: rgba(245, 245, 245, 1.0);
+    display: none;
+    
+    div {
+        margin: 20px auto 15px auto;
+        text-align: center;
+        font-size: 2em;
+    }
+}
+/* 11 MAIN 			============================================================================= */
+
+/* 12 COMPLEMENTARY ============================================================================= */
+
+/* 13 CONTENTINFO 	============================================================================= */
+
+/* 14 GLOBAL OBJECTS ============================================================================= */
+ .clearfix:before, .clearfix:after {
+    content :"\0020";
+    display : block;
+    height : 0;
+    overflow : hidden;
+}
+.clearfix:after {
+    clear : both;
+}
+/* 15 VENDOR-SPECIFIC ============================================================================= */
+ html {
+    -webkit-overflow-scrolling : touch;
+    -webkit-tap-highlight-color : rgb(52, 158, 219);
+    -webkit-text-size-adjust : 100%;
+    -ms-text-size-adjust : 100%;
+}
+.clearfix {
+    zoom : 1;
+}
+::-webkit-selection {
+    background : rgb(23, 119, 175);
+    color : rgb(250, 250, 250);
+    text-shadow : none;
+}
+::-moz-selection {
+    background : rgb(23, 119, 175);
+    color : rgb(250, 250, 250);
+    text-shadow : none;
+}
+::selection {
+    background : rgb(23, 119, 175);
+    color : rgb(250, 250, 250);
+    text-shadow : none;
+}
+button, input[type="button"], input[type="reset"], input[type="submit"] {
+    -webkit-appearance : button;
+}
+::-webkit-input-placeholder {
+    font-size : .875em;
+    line-height : 1.4;
+}
+input:-moz-placeholder {
+    font-size : .875em;
+    line-height : 1.4;
+}
+.ie7 img, .iem7 img {
+    -ms-interpolation-mode : bicubic;
+}
+input[type="checkbox"], input[type="radio"] {
+    box-sizing : border-box;
+}
+input[type="search"] {
+    -webkit-box-sizing : content-box;
+    -moz-box-sizing : content-box;
+}
+button::-moz-focus-inner, input::-moz-focus-inner {
+    padding : 0;
+    border : 0;
+}
+p {
+    /* http://www.w3.org/TR/css3-text/#hyphenation */
+    -webkit-hyphens : auto;
+    -webkit-hyphenate-character :"\2010";
+    -webkit-hyphenate-limit-after : 1;
+    -webkit-hyphenate-limit-before : 3;
+    -moz-hyphens : auto;
+}
+
+
+/* 16 MODERNIZR ============================================================================= */
+
+
+/* 17 TEMPLATE SPECIFICS ============================================================================= */
+
+/* 18 MEDIA QUERIES ============================================================================= */
+
+/* 480px */
+ @media only screen and (min-width: 480px) {
+    
+}
