@@ -180,7 +180,7 @@ module.exports = helpers.defaults({
     }),
    // include uglify in production
     new CompressionPlugin({
-      algorithm: helpers.gzipMaxLevel,
+      //algorithm: helpers.gzipMaxLevel,
       regExp: /\.css$|\.html$|\.js$|\.map$/,
       threshold: 2 * 1024
     })
