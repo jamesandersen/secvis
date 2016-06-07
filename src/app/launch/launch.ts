@@ -37,7 +37,7 @@ export class Launch implements OnInit {
   ngOnInit() {
     this.dataService.getTicker(this.ticker).subscribe(
         // onNext callback
-        data => this.ticker = "success",
+        data => this.ticker = data.json().message,
         // onError callback
         err  => this.ticker = err,
         // onComplete callback

@@ -19,7 +19,7 @@ export class SECDataService {
 
   getTicker(ticker: string): Observable<Response> {
      return this.http
-      .get('assets/data/MSFT.json', {
+      .get('api/secdata/' + ticker, {
         headers: JSON_HEADERS
       });
   }
