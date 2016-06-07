@@ -23,7 +23,7 @@ var PORT = process.env.PORT || 8080;
 
 var metadata = {
   title: 'SEC Visualization',
-  baseUrl: '/secvis/',
+  baseUrl: '/',
   host: HOST,
   port: PORT,
   ENV: ENV
@@ -47,7 +47,7 @@ module.exports = helpers.defaults({
 
   // Config for our build files
   output: {
-    path: helpers.root('prod/secvis/'),
+    path: helpers.root('prod/'),
     filename: '[name].[chunkhash].bundle.js',
     sourceMapFilename: '[name].[chunkhash].bundle.map',
     chunkFilename: '[id].[chunkhash].chunk.js'

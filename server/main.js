@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 
-app.use('/secvis/api', require('./api/api.js'));
+app.use('/api', require('./api/api.js'));
 
 // we only want hot reloading in development
 if (process.env.NODE_ENV !== 'production') {
@@ -11,13 +11,13 @@ if (process.env.NODE_ENV !== 'production') {
     console.log('PRODUCTION ENVIRONMENT');
  
     //Production needs physical files! (built via separate process)
-    app.use('/secvis', express.static(__dirname + '/../prod/secvis'));
+    app.use('/', express.static(__dirname + '/../prod'));
 }
 
 app.get('/', function (req, res) {
   res.send('Hello World!');
 });
 
-app.listen(process.env.PORT || 1337, function () {
-  console.log('Example app listening on port 3000!');
+app.listen(process.env.PORT || 8080, function () {
+  console.log('Example app listening on port process.env.PORT || 8080!');
 });
