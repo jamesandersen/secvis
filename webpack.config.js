@@ -9,10 +9,11 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 var ENV = process.env.ENV = process.env.NODE_ENV = 'development';
 var HMR = helpers.hasProcessFlag('hot');
+var hotMiddlewareScript = 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true';
 
 var metadata = {
   title: 'SEC VIS',
-  baseUrl: '/secvis/',
+  baseUrl: '/',
   host: 'localhost',
   port: 3000,
   ENV: ENV,
@@ -30,14 +31,14 @@ module.exports = helpers.defaults({
 
   // our angular app
   entry: { 
-     'polyfills': './src/polyfills.ts', 
-     'main': './src/main.ts'
+     'polyfills': ['./src/polyfills.ts', hotMiddlewareScript ],
+     'main': ['./src/main.ts', hotMiddlewareScript]
   },
 
   // Config for our build files
   output: {
     path: helpers.root('dist/'),
-    publicPath: "/secvis/"
+    publicPath: "/"
   },
 
   module: {
@@ -70,6 +71,7 @@ module.exports = helpers.defaults({
 
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(true),
+    new webpack.HotModuleReplacementPlugin(),
     new webpack.optimize.CommonsChunkPlugin({ name: 'polyfills', filename: 'polyfills.bundle.js', minChunks: Infinity }),
     
     new ExtractTextPlugin("[name].css"),

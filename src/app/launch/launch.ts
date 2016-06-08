@@ -23,7 +23,10 @@ import {SECDataService} from '../secdata/secdata';
   // Every Angular template is first compiled by the browser before Angular runs it's compiler
   template: `
     <div id="startup">
-        Data Vis Here {{ticker}}
+        Data Vis Here {{ticker.TradingSymbol}}
+        <div>Document Type: {{ticker.DocumentType}}</div>
+        <div>Period End: {{ticker.DocumentPeriodEndDate}}</div>
+        <div>RevenuesZ: {{ticker.Revenues}}</div>
     </div>
   `
 })
@@ -37,7 +40,7 @@ export class Launch implements OnInit {
   ngOnInit() {
     this.dataService.getTicker(this.ticker).subscribe(
         // onNext callback
-        data => this.ticker = data.json().message,
+        data => this.ticker = data.json(),
         // onError callback
         err  => this.ticker = err,
         // onComplete callback

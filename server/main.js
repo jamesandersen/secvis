@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 
+console.log("foo");
 app.use('/api', require('./api/api.js'));
 
 // we only want hot reloading in development
@@ -19,5 +20,5 @@ app.get('/', function (req, res) {
 });
 
 app.listen(process.env.PORT || 8080, function () {
-  console.log('Example app listening on port process.env.PORT || 8080!');
+  console.log('Example app listening on port 8080!');
 });
