@@ -1,10 +1,10 @@
 /*
  * Angular 2 decorators and services
  */
-import {Component} from 'angular2/core';
-import {RouteConfig, Router, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from 'angular2/router';
-import {Http, HTTP_PROVIDERS} from 'angular2/http';
-import {FORM_PROVIDERS} from 'angular2/common';
+import {Component} from '@angular/core';
+import {RouteConfig, Router, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from '@angular/router-deprecated';
+import {Http, HTTP_PROVIDERS} from '@angular/http';
+import {FORM_PROVIDERS} from '@angular/common';
 
 import {Launch} from './launch/launch';
 
