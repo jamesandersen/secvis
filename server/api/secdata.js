@@ -17,32 +17,32 @@ router.use(function timeLog(req, res, next) {
   next();
 });
 // define the home page route
-router.get('/', function(req, res) {
+router.get('/', function (req, res) {
   res.json({ message: 'hooray! welcome to our api!' });
 });
 
 // define the home page route
-router.get('/:ticker', function(req, res, next) {
+router.get('/:ticker', function (req, res, next) {
   let filingType = req.params.type || "10-K";
 
-  co(function*() {
+  co(function* () {
     let db = yield MongoClient.connect(url);
 
     let collection = db.collection("filings");
-    
+
     // Peform a simple find and return all the documents
-    let docs = yield collection.find({ 'TradingSymbol' : req.params.ticker, "DocumentType": filingType })
-                      .sort({dateFiled: -1}).limit(1).toArray();
-    
+    let docs = yield collection.find({ 'TradingSymbol': req.params.ticker, "DocumentType": filingType })
+      .sort({ dateFiled: -1 }).limit(1).toArray();
 
-      // Close db
-      yield db.close();
 
-      if(docs.length) {
-        res.json(docs[0]);
-      } else {
-        res.status(404).json({ message: `No ${filingType} filings found for ${req.params.ticker}`});
-      }
+    // Close db
+    yield db.close();
+
+    if (docs.length) {
+      res.json(docs[0]);
+    } else {
+      res.status(404).json({ message: `No ${filingType} filings found for ${req.params.ticker}` });
+    }
   }).catch(err => {
     console.error(err.stack);
     res.status(500).json(err);
@@ -50,7 +50,7 @@ router.get('/:ticker', function(req, res, next) {
 });
 
 // define the about route
-router.get('/about', function(req, res) {
+router.get('/about', function (req, res) {
   res.send('About birds');
 });
 

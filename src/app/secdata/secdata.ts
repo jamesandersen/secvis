@@ -11,7 +11,7 @@ export class SECDataService {
   // These are member type
   title: string;
   data: Array<any> = []; // default data
-  
+
   // TypeScript public modifiers
   constructor(public http: Http) {
     this.title = 'Angular 2';
@@ -23,12 +23,12 @@ export class SECDataService {
         headers: JSON_HEADERS
       });
   }
-  
+
   serverData(data:any) {
-     
+
   }
-  
+
   errorMessage(err:any) {
-     
+
   }
 }

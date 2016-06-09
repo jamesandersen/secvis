@@ -44,7 +44,7 @@
     "preversion": "npm test",
     "version": "npm run build",
     "postversion": "git push && git push --tags",
-    "express": "node --debug-brk=5858 server/main.js",
+    "express": "node server/main.js",
     "express:prod": "NODE_ENV=production node server/main.js"
   },
   "dependencies": {
@@ -63,6 +63,7 @@
     "copy-webpack-plugin": "^1.1.1",
     "css-loader": "^0.23.1",
     "es6-promise-loader": "^1.0.1",
+    "eslint": "^2.11.1",
     "exports-loader": "^0.6.3",
     "expose-loader": "^0.7.1",
     "extract-text-webpack-plugin": "^1.0.1",
