@@ -11,7 +11,7 @@ if (process.env.NODE_ENV !== "production") {
     console.log("PRODUCTION ENVIRONMENT");
  
     //Production needs physical files! (built via separate process)
-    app.use("/", express.static(__dirname + "/../prod"));
+    app.use("/", express.static(__dirname + "/../dist"));
 }
 
 app.listen(process.env.PORT || 8080, function () {

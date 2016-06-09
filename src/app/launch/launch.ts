@@ -1,6 +1,6 @@
-import {Component, OnInit} from 'angular2/core';
-import {FORM_DIRECTIVES} from 'angular2/common';
-import {RouteConfig, RouteParams, ROUTER_DIRECTIVES, APP_BASE_HREF, ROUTER_BINDINGS} from 'angular2/router'
+import {Component, OnInit} from '@angular/core';
+import {FORM_DIRECTIVES} from '@angular/common';
+import {RouteConfig, RouteParams, ROUTER_DIRECTIVES, ROUTER_BINDINGS} from '@angular/router-deprecated';
 import {SECDataService} from '../secdata/secdata';
 
 /*
@@ -26,7 +26,7 @@ import {SECDataService} from '../secdata/secdata';
         Data Vis Here {{ticker.TradingSymbol}}
         <div>Document Type: {{ticker.DocumentType}}</div>
         <div>Period End: {{ticker.DocumentPeriodEndDate}}</div>
-        <div>RevenuesZ: {{ticker.Revenues}}</div>
+        <div>Revenues: {{ticker.Revenues}}</div>
     </div>
   `
 })

@@ -1,5 +1,5 @@
-import {Http, HTTP_PROVIDERS, Headers, Response} from 'angular2/http';
-import {Injectable} from 'angular2/core';
+import {Http, HTTP_PROVIDERS, Headers, Response} from '@angular/http';
+import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 
 const JSON_HEADERS = new Headers();
