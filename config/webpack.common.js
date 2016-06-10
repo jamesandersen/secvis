@@ -53,9 +53,9 @@ module.exports = {
    */
   entry: {
 
-    'polyfills': './src/polyfills.ts',
+    'polyfills': ['./src/polyfills.ts', 'webpack-hot-middleware/client'],
     //'vendor': './src/vendor.ts',
-    'main': './src/main.browser.ts'
+    'main': ['./src/main.browser.ts', 'webpack-hot-middleware/client']
 
   },
 
@@ -254,6 +254,9 @@ module.exports = {
 
 
     new ExtractTextPlugin("[name].css"),
+
+
+    new webpack.HotModuleReplacementPlugin()
 
   ],
 
