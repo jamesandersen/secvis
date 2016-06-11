@@ -11,7 +11,7 @@ import {SECDataService} from '../secdata/secdata';
   // The selector is what angular internally uses
   // for `document.querySelectorAll(selector)` in our index.html
   // where, in this case, selector is the string 'app'
-  selector: 'launch', // <app></app>
+  selector: 'compare', // <app></app>
   // We need to tell Angular's compiler which directives are in our template.
   // Doing so will allow Angular to attach our behavior to an element
   directives: [ FORM_DIRECTIVES, ROUTER_DIRECTIVES ],
@@ -19,7 +19,7 @@ import {SECDataService} from '../secdata/secdata';
   providers: [ SECDataService ],
   pipes: [],
   // Our list of styles in our component. We may add more to compose many styles together
-  styles: [require('./launch.less')],
+  styles: [require('./compare.less')],
   // Every Angular template is first compiled by the browser before Angular runs it's compiler
   template: `
     <div id="startup">
@@ -30,7 +30,7 @@ import {SECDataService} from '../secdata/secdata';
     </div>
   `
 })
-export class Launch implements OnInit {
+export class CompareComponent implements OnInit {
    public ticker: string;
    
    constructor(public dataService: SECDataService) {
