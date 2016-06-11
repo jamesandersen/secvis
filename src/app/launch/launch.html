@@ -3,12 +3,14 @@
     <form>
       <div class="form-group">
         <label for="name">Ticker 1</label>
-        <input type="text" class="form-control" required [(ngModel)]="compare.ticker1">
+        <input type="text" class="form-control" required [(ngModel)]="setTickers.ticker1">
       </div>
       <div class="form-group">
-        <label for="alterEgo">Ticker 2</label>
-        <input type="text" class="form-control" [(ngModel)]="compare.ticker2">>
+        <label for="name">Ticker 2</label>
+        <input type="text" class="form-control" [(ngModel)]="setTickers.ticker2">
       </div>
-      <button type="submit" class="btn btn-default" (click)="showCompare()">Submit</button>
+      <button type="submit" class="btn btn-default" (click)="emitSetTicker()">Submit</button>
     </form>
+    <div>{{(compare | async).ticker1}}</div>
+
 </div>

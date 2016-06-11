@@ -1,8 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Inject} from '@angular/core';
 import {FORM_DIRECTIVES} from '@angular/common';
 import {RouteConfig, RouteParams, ROUTER_DIRECTIVES, ROUTER_BINDINGS} from '@angular/router-deprecated';
 import {SECDataService} from '../secdata/secdata';
-import {SECCompare} from './SECCompare';
+import {AppState} from '../model/AppState';
+import {SetTickersAction} from '../model/Actions';
+import {state, dispatcher, stateAndDispatcher } from '../app.dispatcher';
 
 /*
  * App Component
@@ -17,7 +19,7 @@ import {SECCompare} from './SECCompare';
   // Doing so will allow Angular to attach our behavior to an element
   directives: [ FORM_DIRECTIVES, ROUTER_DIRECTIVES ],
 
-  providers: [ SECDataService ],
+  providers: [ SECDataService, stateAndDispatcher ],
   pipes: [],
   // Our list of styles in our component. We may add more to compose many styles together
   styles: [require('./launch.less')],
@@ -25,17 +27,26 @@ import {SECCompare} from './SECCompare';
   template: require('./launch.html')
 })
 export class Launch implements OnInit {
-   public compare: SECCompare;
+   public setTickers: SetTickersAction;
    public error: string;
-   constructor(public dataService: SECDataService) {
-    this.compare = new SECCompare();
+   constructor(@Inject(dispatcher) private dispatcher: Observer<Action>,
+              @Inject(state) private state: Observable<AppState>,
+              public dataService: SECDataService) {
+
+    this.setTickers = new SetTickersAction();
   }
 
   ngOnInit() {
-    
+
   }
 
+  get compare() { return this.state.map(s => s.compare); }
+
+  emitSetTicker() { this.dispatcher.next(this.setTickers); }
+
   showCompare() {
+
+
     this.dataService.getTicker(this.compare.symbol1).subscribe(
         // onNext callback
         data => this.compare.filing1 = data.json(),
