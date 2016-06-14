@@ -9,6 +9,8 @@ import { HTTP_PROVIDERS } from '@angular/http';
 // Angular 2 Router
 import { ROUTER_PROVIDERS } from '@angular/router-deprecated';
 
+import {state, dispatcher, stateAndDispatcher } from '../../app/app.dispatcher';
+
 /*
 * Application Providers/Directives/Pipes
 * providers/directives/pipes that only live in our browser environment
@@ -17,6 +19,7 @@ export const APPLICATION_PROVIDERS = [
   ...FORM_PROVIDERS,
   ...HTTP_PROVIDERS,
   ...ROUTER_PROVIDERS,
+  ...stateAndDispatcher,
   {provide: LocationStrategy, useClass: HashLocationStrategy }
 ];
 

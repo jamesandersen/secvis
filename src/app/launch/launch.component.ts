@@ -5,7 +5,7 @@ import { ActivatedRoute, Router, ROUTER_DIRECTIVES } from '@angular/router';
 import {SECDataService} from '../secdata/secdata';
 import {AppState} from '../model/AppState';
 import {SetTickersAction} from '../model/Actions';
-import {state, dispatcher, stateAndDispatcher } from '../app.dispatcher';
+import {state, dispatcher } from '../../app/app.dispatcher';
 
 /*
  * App Component
@@ -20,7 +20,7 @@ import {state, dispatcher, stateAndDispatcher } from '../app.dispatcher';
   // Doing so will allow Angular to attach our behavior to an element
   directives: [ FORM_DIRECTIVES, ROUTER_DIRECTIVES ],
 
-  providers: [ SECDataService, stateAndDispatcher ],
+  providers: [ SECDataService],
   //pipes: [],
   // Our list of styles in our component. We may add more to compose many styles together
   //styles: [require('./launch.less')],
@@ -35,7 +35,7 @@ export class LaunchComponent implements OnInit {
               private router: Router,
               private route: ActivatedRoute,
               public dataService: SECDataService) {
-
+    console.log("launch constructor");
     this.setTickers = new SetTickersAction();
   }
 
@@ -43,7 +43,12 @@ export class LaunchComponent implements OnInit {
 
   }
 
-  get compare() { return this.state.map(s => s.compare); }
+  get compare() { 
+    return this.state.map(s => {
+      console.log('mapping app state: ' + JSON.stringify(s) );
+      return s.compare;
+    } 
+  }
 
   emitSetTicker() { 
     this.dispatcher.next(this.setTickers); 
@@ -51,7 +56,7 @@ export class LaunchComponent implements OnInit {
     // Pass along the hero id if available
     // so that the HeroList component can select that hero.
     // Add a totally useless `foo` parameter for kicks.
-    this.router.navigate(['/compare'], { queryParams: { id: `bar`, foo: 'foo' } }, { relativeTo: this.route });  
+    this.router.navigate(['/compare']);  
   }
 
   showCompare() {
