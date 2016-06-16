@@ -46,7 +46,7 @@ require('./shared.less');
         <h2><span>SEC</span>VIS</h2>
     </header>
     <nav>
-      <a [routerLink]="['/launch']">Launch</a>
+      <a [routerLink]="['/']">Launch</a>
       <a [routerLink]="['/compare']">Compare</a>
     </nav>
     <div class="content clearfix" role="main">

@@ -1,8 +1,8 @@
 import { OpaqueToken, provide, Inject } from '@angular/core';
 import { SECCompare, AppState} from './model/AppState';
-import { Action, SetTickersAction, ClearTickersAction } from './model/Actions';
+import { Action, SetTickersAction, ClearTickersAction, SetFilingAction } from './model/Actions';
 
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, Observable, Observer } from 'rxjs';
 
 export const initState = new OpaqueToken('initState');
 export const dispatcher = new OpaqueToken('dispatcher');
@@ -34,6 +34,7 @@ function stateFn(initState: AppState, actions: Observable<Action>): Observable<A
   return wrapIntoBehavior(initState, appStateObs);
 }
 
+// TODO: Not really doing anything here to enforce immutability
 function generateState(initialState: SECCompare, actions: Observable<Action>): Observable<SECCompare> {
   return actions.scan((state, action) => {
     if (action instanceof SetTickersAction) {
@@ -56,21 +57,22 @@ function generateState(initialState: SECCompare, actions: Observable<Action>): O
         filing2: null
       };
       return newCompare;
+    } else if (action instanceof SetFilingAction) {
+      const newCompare = {
+        ticker1: state.ticker1,
+        ticker2: state.ticker2,
+        symbol1: state.symbol1,
+        symbol2: state.symbol2,
+        filing1: state.ticker1 === action.ticker ? action.filing : state.filing1,
+        filing2: state.ticker2 === action.ticker ? action.filing : state.filing2
+      };
+      return newCompare;
     } else {
       return state;
     }
   }, initialState);
 }
 
-function updateTodo(todo: Todo, action: Action): Todo {
-  if (action instanceof ToggleTodoAction) {
-    // merge creates a new object using the properties of the passed in objects
-    return (action.id !== todo.id) ? todo : merge(todo, { completed: !state.completed });
-
-  } else {
-    return todo;
-  }
-}
 
 function wrapIntoBehavior(init, obs) {
   const res = new BehaviorSubject(init);

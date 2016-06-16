@@ -22,7 +22,7 @@ router.get('/', function (req, res) {
 });
 
 // define the home page route
-router.get('/:ticker', function (req, res, next) {
+router.get('/:ticker/filing', function (req, res, next) {
   let filingType = req.params.type || "10-K";
 
   co(function* () {

@@ -1,10 +1,10 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {FORM_DIRECTIVES} from '@angular/common';
-//import {RouteConfig, RouteParams, ROUTER_DIRECTIVES, ROUTER_BINDINGS} from '@angular/router-deprecated';
+import {Observable, Observer} from 'rxjs';
+import {Action, SetTickersAction, ClearTickersAction } from '../model/Actions';
 import { ActivatedRoute, Router, ROUTER_DIRECTIVES } from '@angular/router';
 import {SECDataService} from '../secdata/secdata';
 import {AppState} from '../model/AppState';
-import {SetTickersAction} from '../model/Actions';
 import {state, dispatcher } from '../../app/app.dispatcher';
 
 /*
@@ -18,9 +18,9 @@ import {state, dispatcher } from '../../app/app.dispatcher';
   //selector: 'launch', // <app></app>
   // We need to tell Angular's compiler which directives are in our template.
   // Doing so will allow Angular to attach our behavior to an element
-  directives: [ FORM_DIRECTIVES, ROUTER_DIRECTIVES ],
+  directives: [FORM_DIRECTIVES, ROUTER_DIRECTIVES],
 
-  providers: [ SECDataService],
+  providers: [SECDataService],
   //pipes: [],
   // Our list of styles in our component. We may add more to compose many styles together
   //styles: [require('./launch.less')],
@@ -28,48 +28,29 @@ import {state, dispatcher } from '../../app/app.dispatcher';
   template: require('./launch.html')
 })
 export class LaunchComponent implements OnInit {
-   public setTickers: SetTickersAction;
-   public error: string;
-   constructor(@Inject(dispatcher) private dispatcher: Observer<Action>,
-              @Inject(state) private state: Observable<AppState>,
-              private router: Router,
-              private route: ActivatedRoute,
-              public dataService: SECDataService) {
-    console.log("launch constructor");
-    this.setTickers = new SetTickersAction();
+  public setTickers: SetTickersAction;
+  public error: string;
+  constructor( @Inject(dispatcher) private dispatcher: Observer<Action>,
+    @Inject(state) private state: Observable<AppState>,
+    private router: Router,
+    private route: ActivatedRoute,
+    public dataService: SECDataService) {
+    this.setTickers = new SetTickersAction(null, null);
   }
 
   ngOnInit() {
 
   }
 
-  get compare() { 
-    return this.state.map(s => {
-      console.log('mapping app state: ' + JSON.stringify(s) );
-      return s.compare;
-    } 
-  }
+  get compare() { return this.state.map(s => s.compare); }
 
-  emitSetTicker() { 
-    this.dispatcher.next(this.setTickers); 
+  emitSetTicker() {
+    this.dispatcher.next(this.setTickers);
 
     // Pass along the hero id if available
     // so that the HeroList component can select that hero.
     // Add a totally useless `foo` parameter for kicks.
-    this.router.navigate(['/compare']);  
-  }
-
-  showCompare() {
-
-
-    this.dataService.getTicker(this.compare.symbol1).subscribe(
-        // onNext callback
-        data => this.compare.filing1 = data.json(),
-        // onError callback
-        err  => this.error = err,
-        // onComplete callback
-        ()   => console.log('complete')
-      );
+    this.router.navigate(['/compare']);
   }
 
 }

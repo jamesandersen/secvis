@@ -1,7 +1,13 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Inject} from '@angular/core';
 import {FORM_DIRECTIVES} from '@angular/common';
-import {RouteConfig, RouteParams, ROUTER_DIRECTIVES, ROUTER_BINDINGS} from '@angular/router-deprecated';
+import {ROUTER_DIRECTIVES} from '@angular/router';
 import {SECDataService} from '../secdata/secdata';
+import {FilingChartComponent} from '../filing-chart/filing-chart.component';
+import {state, dispatcher } from '../../app/app.dispatcher';
+import {Observable, Observer} from 'rxjs';
+
+import {AppState} from '../model/AppState';
+import {Action, SetFilingAction} from '../model/Actions';
 
 /*
  * App Component
@@ -14,7 +20,7 @@ import {SECDataService} from '../secdata/secdata';
   selector: 'compare', // <app></app>
   // We need to tell Angular's compiler which directives are in our template.
   // Doing so will allow Angular to attach our behavior to an element
-  directives: [ FORM_DIRECTIVES, ROUTER_DIRECTIVES ],
+  directives: [ FORM_DIRECTIVES, ROUTER_DIRECTIVES, FilingChartComponent ],
   
   providers: [ SECDataService ],
   pipes: [],
@@ -23,28 +29,36 @@ import {SECDataService} from '../secdata/secdata';
   // Every Angular template is first compiled by the browser before Angular runs it's compiler
   template: `
     <div id="startup">
-        Data Vis Here {{ticker.TradingSymbol}}
-        <div>Document Type: {{ticker.DocumentType}}</div>
-        <div>Period End: {{ticker.DocumentPeriodEndDate}}</div>
-        <div>Revenues: {{ticker.Revenues}}</div>
+        Data Vis Here {{(compare | async).filing1?.TradingSymbol}}
+        <div>Document Type: {{(compare | async).filing1?.DocumentType}}</div>
+        <div>Period End: {{(compare | async).filing1?.DocumentPeriodEndDate}}</div>
+        <div>Revenues: {{(compare | async).filing1?.Revenues}}</div>
+
+        <filing-chart [filing]="(compare | async).filing1"></filing-chart> 
+        Chart?
     </div>
   `
 })
 export class CompareComponent implements OnInit {
    public ticker: string;
    
-   constructor(public dataService: SECDataService) {
+   constructor(
+     @Inject(dispatcher) private dispatcher: Observer<Action>,
+     @Inject(state) private state: Observable<AppState>,
+    public dataService: SECDataService) {
     this.ticker = 'MSFT';
   }
   
   ngOnInit() {
-    this.dataService.getTicker(this.ticker).subscribe(
+    this.dataService.getFiling(this.ticker).subscribe(
         // onNext callback
-        data => this.ticker = data.json(),
+        data => this.dispatcher.next(new SetFilingAction(this.ticker, data.json())),
         // onError callback
         err  => this.ticker = err,
         // onComplete callback
         ()   => console.log('complete')
       );
   }
+
+  get compare() { return this.state.map(s => s.compare); }
 }

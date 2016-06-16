@@ -7,7 +7,7 @@ import { FORM_PROVIDERS, HashLocationStrategy, LocationStrategy } from '@angular
 // Angular 2 Http
 import { HTTP_PROVIDERS } from '@angular/http';
 // Angular 2 Router
-import { ROUTER_PROVIDERS } from '@angular/router-deprecated';
+//import { ActivatedRoute, Router, ROUTER_DIRECTIVES } from '@angular/router';
 
 import {state, dispatcher, stateAndDispatcher } from '../../app/app.dispatcher';
 
@@ -18,7 +18,7 @@ import {state, dispatcher, stateAndDispatcher } from '../../app/app.dispatcher';
 export const APPLICATION_PROVIDERS = [
   ...FORM_PROVIDERS,
   ...HTTP_PROVIDERS,
-  ...ROUTER_PROVIDERS,
+  //...ROUTER_PROVIDERS,
   ...stateAndDispatcher,
   {provide: LocationStrategy, useClass: HashLocationStrategy }
 ];

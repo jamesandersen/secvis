@@ -17,9 +17,9 @@ export class SECDataService {
     this.title = 'Angular 2';
   }
 
-  getTicker(ticker: string): Observable<Response> {
+  getFiling(ticker: string): Observable<Response> {
      return this.http
-      .get('api/secdata/' + ticker, {
+      .get('api/secdata/' + ticker + '/filing', {
         headers: JSON_HEADERS
       });
   }
