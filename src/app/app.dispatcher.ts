@@ -27,7 +27,7 @@ export const stateAndDispatcher = [
 
 function stateFn(initState: AppState, actions: Observable<Action>): Observable<AppState> {
 
-  const compareToState = compare => ({ compare: compare });
+  const compareToState = compare => (<AppState>{ compare: compare });
 
   const appStateObs: Observable<AppState> = generateState(initState.compare, actions).map(compareToState);
 
