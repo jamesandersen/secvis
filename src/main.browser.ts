@@ -8,6 +8,7 @@ import { bootstrap } from '@angular/platform-browser-dynamic';
 */
 import { DIRECTIVES, PIPES, PROVIDERS } from './platform/browser';
 import { ENV_PROVIDERS } from './platform/environment';
+import { APP_ROUTER_PROVIDERS } from './app/app.routes';
 
 /*
  * App Component
@@ -25,15 +26,12 @@ export function main(initialHmrState?: any): Promise<any> {
     ...ENV_PROVIDERS,
     ...DIRECTIVES,
     ...PIPES,
-    ...APP_PROVIDERS
+    ...APP_PROVIDERS,
+    ...APP_ROUTER_PROVIDERS
   ])
-  .catch(err => console.error(err));
+  .catch(err => console.error( "ERROR: " + err));
 
 }
-
-
-
-
 
 /*
  * Vendors

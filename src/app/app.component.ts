@@ -2,11 +2,9 @@
  * Angular 2 decorators and services
  */
 import {Component} from '@angular/core';
-import {RouteConfig, Router, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from '@angular/router-deprecated';
+import { ROUTER_DIRECTIVES } from '@angular/router';
 import {Http, HTTP_PROVIDERS} from '@angular/http';
 import {FORM_PROVIDERS} from '@angular/common';
-
-import {Launch} from './launch/launch';
 
 require('./shared.less');
 
@@ -20,7 +18,7 @@ require('./shared.less');
   // where, in this case, selector is the string 'app'
   selector: 'app', // <app></app>
   // We need to tell Angular's Dependency Injection which providers are in our app.
-  providers: [ FORM_PROVIDERS, HTTP_PROVIDERS, ROUTER_PROVIDERS],
+  providers: [ FORM_PROVIDERS, HTTP_PROVIDERS],
   // We need to tell Angular's compiler which directives are in our template.
   // Doing so will allow Angular to attach our behavior to an element
   directives: [ ROUTER_DIRECTIVES ],
@@ -47,15 +45,16 @@ require('./shared.less');
     <header role="banner">
         <h2><span>SEC</span>VIS</h2>
     </header>
+    <nav>
+      <a [routerLink]="['/']">Launch</a>
+      <a [routerLink]="['/compare']">Compare</a>
+    </nav>
     <div class="content clearfix" role="main">
       <router-outlet></router-outlet>
     </div>
   </div>
   `
 })
-@RouteConfig([
-  {path: '/', name: 'LaunchCmp', component: Launch},
-])
 export class App {
   // These are member type
   title: string;
