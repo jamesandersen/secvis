@@ -24,8 +24,18 @@ export class SECDataService {
       });
   }
 
-  serverData(data:any) {
+  getSymbol(ticker: string): Observable<Response> {
+     return this.http
+      .get('api/secdata/' + ticker + '/symbol', {
+        headers: JSON_HEADERS
+      });
+  }
 
+  searchSymbols(ticker: string): Observable<Array<Symbol>> {
+     return this.http
+      .get('api/secdata/symbols/search/' + ticker, {
+        headers: JSON_HEADERS
+      }).map(resp => resp.json());
   }
 
   errorMessage(err:any) {
