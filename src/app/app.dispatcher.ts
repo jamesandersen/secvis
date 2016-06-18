@@ -1,6 +1,6 @@
 import { OpaqueToken, provide, Inject } from '@angular/core';
 import { SECCompare, AppState} from './model/AppState';
-import { Action, SetTickersAction, ClearTickersAction, SetFilingAction } from './model/Actions';
+import { Action, SetSymbolAction, ClearTickersAction, SetFilingAction } from './model/Actions';
 
 import { BehaviorSubject, Subject, Observable, Observer } from 'rxjs';
 
@@ -37,20 +37,16 @@ function stateFn(initState: AppState, actions: Observable<Action>): Observable<A
 // TODO: Not really doing anything here to enforce immutability
 function generateState(initialState: SECCompare, actions: Observable<Action>): Observable<SECCompare> {
   return actions.scan((state, action) => {
-    if (action instanceof SetTickersAction) {
+    if (action instanceof SetSymbolAction) {
       const newCompare = {
-        ticker1: action.ticker1,
-        ticker2: action.ticker2,
-        symbol1: null,
-        symbol2: null,
+        symbol1: action.symbolIndex === 1 ? action.symbol : state.symbol1,
+        symbol2: action.symbolIndex === 2 ? action.symbol : state.symbol2,
         filing1: null,
         filing2: null
       };
       return newCompare;
     } else if (action instanceof ClearTickersAction) {
       const newCompare = {
-        ticker1: null,
-        ticker2: null,
         symbol1: null,
         symbol2: null,
         filing1: null,
@@ -59,18 +55,16 @@ function generateState(initialState: SECCompare, actions: Observable<Action>): O
       return newCompare;
     } else if (action instanceof SetFilingAction) {
       const newCompare = {
-        ticker1: state.ticker1,
-        ticker2: state.ticker2,
         symbol1: state.symbol1,
         symbol2: state.symbol2,
-        filing1: state.ticker1 === action.ticker ? action.filing : state.filing1,
-        filing2: state.ticker2 === action.ticker ? action.filing : state.filing2
+        filing1: state.symbol1 !== null && state.symbol1.Symbol === action.filing.TradingSymbol ? action.filing : state.filing1,
+        filing2: state.symbol2 !== null && state.symbol2.Symbol === action.filing.TradingSymbol ? action.filing : state.filing2
       };
       return newCompare;
     } else {
       return state;
     }
-  }, initialState);
+  }, initialState).share();
 }
 
 

@@ -5,7 +5,10 @@
       <h3>First Ticker</h3>
       <input type="text" name="ticker1" required formControlName="ticker1">
       <ul [hidden]="ticker1Loading | async">
-        <li *ngFor="let symbol of ticker1Symbols | async">{{symbol.exchange}}:{{symbol.Symbol}} - {{symbol.Name}}</li>
+        <symbol-item *ngFor="let symbol of ticker1Symbols | async" 
+          [symbol]="symbol"
+          [selected]="!(compare | async).symbol1 ? undefined : symbol.Symbol === (compare | async).symbol1.Symbol"
+          (selection)="onSelection(1, $event)"></symbol-item>
       </ul>
       <div [hidden]="(ticker1Loading | async) === false || false" class="loader">Loading...</div>
     </div>
@@ -14,15 +17,15 @@
       <input type="text" class="form-control" formControlName="ticker2">
       
       <ul [hidden]="ticker2Loading | async">
-        <li *ngFor="let symbol of ticker2Symbols | async">
-          <div><span class="exchange">{{symbol.exchange}}:</span><span class="ticker">{{symbol.Symbol}}</span></div>
-          <div class="name">{{symbol.Name}}</div>
-        </li>
+        <symbol-item *ngFor="let symbol of ticker2Symbols | async"
+          [symbol]="symbol"
+          [selected]="!(compare | async).symbol2 ? undefined : symbol.Symbol === (compare | async).symbol2.Symbol"
+          (selection)="onSelection(2, $event)"></symbol-item>
       </ul>
       <div [hidden]="(ticker2Loading | async) === false || false" class="loader">Loading...</div>
     </div>
 
   </form>
-  <button class="btn btn-default" (click)="emitSetTicker()">Submit</button>
+  <button class="btn btn-default" (click)="compareSymbols()">Compare</button>
   <div>{{(compare | async).ticker1}}</div>
 </div>
