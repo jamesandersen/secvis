@@ -33,7 +33,7 @@ router.get('/symbols/search/:ticker', function (req, res, next) {
     let docs = yield collection.find({ 'Symbol': {$regex: '^' + req.params.ticker, $options:"i"} }).limit(10).toArray();
 
     // Arbitrary delay (for local testing of loading states)
-    yield new Promise((resolve, reject) => setTimeout(() => resolve({delayed: true}), 2000) ); // 2 seconds pass..
+    //yield new Promise((resolve, reject) => setTimeout(() => resolve({delayed: true}), 2000) ); // 2 seconds pass..
     
     // Close db
     yield db.close();
