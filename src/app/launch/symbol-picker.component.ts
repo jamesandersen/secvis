@@ -1,7 +1,7 @@
 import {Component, OnInit, Inject, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
 import {Response} from '@angular/http';
 import {REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup } from '@angular/forms';
-import {Observable, Observer, Subject} from 'rxjs';
+import {Observable, Observer, BehaviorSubject} from 'rxjs';
 import {Action, SetSymbolAction } from '../model/Actions';
 import {SECDataService} from '../secdata/secdata';
 import {Symbol} from '../model/symbol';
@@ -29,7 +29,7 @@ import {SymbolItemComponent} from './symbol-item.component';
   // Every Angular template is first compiled by the browser before Angular runs it's compiler
   template: `<div class="symbol" [formGroup]="symbolForm">
       <input type="text" name="ticker" required formControlName="ticker">
-      <ul [hidden]="tickerLoading | async">
+      <ul [hidden]="loading | async">
         <symbol-item *ngFor="let symbol of tickerSymbols | async" (click)="onSelection(symbol)"
           [symbol]="symbol"
           [selected]="!selectedSymbol ? undefined : symbol.Symbol === selectedSymbol.Symbol"
@@ -43,18 +43,15 @@ export class SymbolPickerComponent implements OnInit, OnChanges {
   @Output() symbolSelected = new EventEmitter<Symbol>();
 
   public tickerControl = new FormControl();
-  public symbolForm = new FormGroup({
-      ticker: this.tickerControl
-   });
-  public tickerSymbols: Observable<Array<Symbol>>;
-  public tickerLoading: Observable<boolean>;
-  public error: string;
+  public symbolForm = new FormGroup({ ticker: this.tickerControl });
 
-  private symbolsSubject = new Subject<Symbol[]>();
-  private loading = new Subject<boolean>();
+  public tickerSymbols: Observable<Array<Symbol>>;
+  public loading = new BehaviorSubject<boolean>(false);
+
+  private symbolsSubject = new BehaviorSubject<Symbol[]>([]);
   private updatingSelectedSymbol : boolean = false;
 
-  constructor( 
+  constructor(
     @Inject(state) private state: Observable<AppState>,
     public dataService: SECDataService) { }
 
@@ -69,30 +66,36 @@ export class SymbolPickerComponent implements OnInit, OnChanges {
 
     // for each ticker value change, fetch the matching symbol values
     this.tickerSymbols = Observable.merge(
-        // seed the observable with an initial value 
-        this.symbolsSubject,
-        tickerChanges.switchMap(term => {
-                    console.log('ticker value change: ' + term);
-                    return this.dataService.searchSymbols(term)
-                          .catch((err, obs) => 
-                            Observable.from([[ <Symbol>{ Name: `no data matches ${term}`}]]));
-                  }).do(val => this.loading.next(false)))
-                  .share();
+      // seed the observable with an initial value 
+      this.symbolsSubject,
+      tickerChanges
+        .switchMap(term => {
+          console.log('ticker value change: ' + term);
+          this.loading.next(true);
+          return this.dataService.searchSymbols(term)
+                  .catch((err, obs) => Observable.from([[ <Symbol>{ Name: `no data matches ${term}`}]]));
+        })
+        .do(val => this.loading.next(false))
+    ).share();
   }
 
   ngOnChanges(changes: SimpleChanges) {
       if (changes['selectedSymbol']) {
-        if(changes['selectedSymbol'].currentValue) {
-          this.updatingSelectedSymbol = true;
-          this.tickerControl.updateValue(changes['selectedSymbol'].currentValue.Symbol);
-          this.symbolsSubject.next([changes['selectedSymbol'].currentValue]);
-          this.loading.next(false);
-          this.updatingSelectedSymbol = false;
+        if (changes['selectedSymbol'].currentValue) {
+          this.setupSelectedSymbol(changes['selectedSymbol'].currentValue);
         }
       }
   }
 
   onSelection(evt: Symbol) {
     this.symbolSelected.emit(evt);
+  }
+
+  setupSelectedSymbol(sym: Symbol) {
+    this.updatingSelectedSymbol = true;
+    this.tickerControl.updateValue(sym.Symbol);
+    this.symbolsSubject.next([sym]);
+    this.loading.next(false);
+    this.updatingSelectedSymbol = false;
   }
 }
