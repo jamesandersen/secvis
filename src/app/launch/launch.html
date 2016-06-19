@@ -1,31 +1,13 @@
 <div class="container">
   <h2>Choose Tickers</h2>
-  <form [formGroup]="symbols">
-    <div class="symbol">
-      <h3>First Ticker</h3>
-      <input type="text" name="ticker1" required formControlName="ticker1">
-      <ul [hidden]="ticker1Loading | async">
-        <symbol-item *ngFor="let symbol of ticker1Symbols | async" 
-          [symbol]="symbol"
-          [selected]="!(compare | async).symbol1 ? undefined : symbol.Symbol === (compare | async).symbol1.Symbol"
-          (selection)="onSelection(1, $event)"></symbol-item>
-      </ul>
-      <div [hidden]="(ticker1Loading | async) === false || false" class="loader">Loading...</div>
-    </div>
-    <div class="symbol">
-      <h3>Second Ticker</h3>
-      <input type="text" class="form-control" formControlName="ticker2">
-      
-      <ul [hidden]="ticker2Loading | async">
-        <symbol-item *ngFor="let symbol of ticker2Symbols | async"
-          [symbol]="symbol"
-          [selected]="!(compare | async).symbol2 ? undefined : symbol.Symbol === (compare | async).symbol2.Symbol"
-          (selection)="onSelection(2, $event)"></symbol-item>
-      </ul>
-      <div [hidden]="(ticker2Loading | async) === false || false" class="loader">Loading...</div>
-    </div>
-
-  </form>
+  <div>
+    <symbol-picker
+      [selectedSymbol]="(compare | async).symbol1"
+      (symbolSelected)="onSelection(1, $event)"></symbol-picker>
+    <symbol-picker
+      [selectedSymbol]="(compare | async).symbol2"
+      (symbolSelected)="onSelection(2, $event)"></symbol-picker>
+  </div>
   <button class="btn btn-default" (click)="compareSymbols()">Compare</button>
   <div>{{(compare | async).ticker1}}</div>
 </div>
