@@ -25,6 +25,9 @@ import { Filing } from '../model/filing';
   template: `
     <div class="chart" @chartStateTrigger="chartState">
         Filing Chart {{filing?.TradingSymbol}}
+        <div>Document Type: {{filing?.DocumentType}}</div>
+        <div>Period End: {{filing?.DocumentPeriodEndDate}}</div>
+        <div>Revenues: {{filing?.Revenues}}</div>
         <button (click)="toggleChartState()">Toggle State</button>
     </div>
   `,

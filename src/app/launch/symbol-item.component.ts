@@ -1,30 +1,19 @@
-import {Component, OnInit, Inject, Input, Output, EventEmitter, ChangeDetectionStrategy, trigger,
+import {Component, Input, EventEmitter, ChangeDetectionStrategy, trigger,
   state,
   style,
   transition,
   animate } from '@angular/core';
 import {Symbol} from '../model/symbol';
 
-/*
- * App Component
- * Top Level Component
- */
 @Component({
-  // The selector is what angular internally uses
-  // for `document.querySelectorAll(selector)` in our index.html
-  // where, in this case, selector is the string 'app'
   selector: 'symbol-item', // <app></app>
-  // We need to tell Angular's compiler which directives are in our template.
-  // Doing so will allow Angular to attach our behavior to an element
   directives: [ ],
-  
   providers: [],
   pipes: [],
-  // Our list of styles in our component. We may add more to compose many styles together
   styles: [require('./symbol-item.less')],
   // Every Angular template is first compiled by the browser before Angular runs it's compiler
   template: `
-    <li @itemStateTrigger="state" class="symbol-item">
+    <li @itemStateTrigger="state" class="symbol-item" [ngClass]="{ selected: state == 'selected' }">
       <div>
         <svg class="check" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
         <g>
@@ -46,16 +35,18 @@ import {Symbol} from '../model/symbol';
         transform: 'scale(1)'
       })),
       state('selected',   style({
-        borderColor: 'green',
-        backgroundColor: 'green',
-        color: 'white'
+        transform: 'scale(1.1)'
       })),
       state('unselected',   style({
         borderColor: 'gray'
       })),
+      transition('default => selected, unselected => selected', [
+        style({transform: 'scale(1)'}),
+        animate(200)
+      ]),
       transition('void => *', [
-        style({transform: 'translateX(-100%) scale(1)'}),
-        animate(100)
+        style({transform: 'scale(0.75)', opacity: '0.2'}),
+        animate(200)
       ]),
       transition('* => void', [
         animate(100, style({transform: 'translateX(100%) scale(1)'}))

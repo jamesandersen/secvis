@@ -92,6 +92,9 @@ router.get('/:ticker/filing', function (req, res, next) {
     // Close db
     yield db.close();
 
+    // Arbitrary delay (for local testing of loading states)
+    //yield new Promise((resolve, reject) => setTimeout(() => resolve({delayed: true}), 2000) ); // 2 seconds pass..
+
     if (docs.length) {
       res.json(docs[0]);
     } else {

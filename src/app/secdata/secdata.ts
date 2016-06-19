@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 
 import {Symbol} from '../model/symbol';
+import {Filing} from '../model/filing';
 
 const JSON_HEADERS = new Headers();
 JSON_HEADERS.append('Accept', 'application/json');
@@ -19,11 +20,11 @@ export class SECDataService {
     this.title = 'Angular 2';
   }
 
-  getFiling(ticker: string): Observable<Response> {
+  getFiling(ticker: string): Observable<Filing> {
      return this.http
       .get('api/secdata/' + ticker + '/filing', {
         headers: JSON_HEADERS
-      });
+      }).map(resp => resp.json());
   }
 
   getSymbol(ticker: string): Observable<Symbol> {
