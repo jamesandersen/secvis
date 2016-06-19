@@ -52,7 +52,7 @@ export class CompareComponent implements OnInit {
   ngOnInit() {
     this.dataService.getFiling(this.ticker).subscribe(
         // onNext callback
-        data => this.dispatcher.next(new SetFilingAction(this.ticker, data.json())),
+        data => this.dispatcher.next(new SetFilingAction(data.json())),
         // onError callback
         err  => this.ticker = err,
         // onComplete callback

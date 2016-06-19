@@ -2,6 +2,8 @@ import {Http, HTTP_PROVIDERS, Headers, Response} from '@angular/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 
+import {Symbol} from '../model/symbol';
+
 const JSON_HEADERS = new Headers();
 JSON_HEADERS.append('Accept', 'application/json');
 JSON_HEADERS.append('Content-Type', 'application/json');
@@ -24,11 +26,11 @@ export class SECDataService {
       });
   }
 
-  getSymbol(ticker: string): Observable<Response> {
+  getSymbol(ticker: string): Observable<Symbol> {
      return this.http
       .get('api/secdata/' + ticker + '/symbol', {
         headers: JSON_HEADERS
-      });
+      }).map(resp => resp.json());
   }
 
   searchSymbols(ticker: string): Observable<Array<Symbol>> {

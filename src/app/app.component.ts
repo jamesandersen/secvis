@@ -43,12 +43,8 @@ require('./shared.less');
     <div class="light" id="l2"></div>
     <div class="light" id="l3"></div>
     <header role="banner">
-        <h2><span>SEC</span>VIS</h2>
+        <h2><span>SEC</span> Compare</h2>
     </header>
-    <nav>
-      <a [routerLink]="['/']">Launch</a>
-      <a [routerLink]="['/compare']">Compare</a>
-    </nav>
     <div class="content clearfix" role="main">
       <router-outlet></router-outlet>
     </div>

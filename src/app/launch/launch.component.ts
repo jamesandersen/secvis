@@ -1,13 +1,13 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Response} from '@angular/http';
-import {REACTIVE_FORM_DIRECTIVES, FormControl, FormGroup } from '@angular/forms';
 import {Observable, Observer} from 'rxjs';
-import {Action, SetTickersAction, SetSymbolAction, ClearTickersAction } from '../model/Actions';
+import {Action, SetSymbolAction } from '../model/Actions';
 import { ActivatedRoute, Router, ROUTER_DIRECTIVES } from '@angular/router';
-import {SECDataService} from '../secdata/secdata';
 import {Symbol} from '../model/symbol';
 import {AppState} from '../model/AppState';
 import {state, dispatcher } from '../../app/app.dispatcher';
+import {SymbolPickerComponent} from './symbol-picker.component';
+import {SECDataService} from '../secdata/secdata';
 
 /*
  * App Component
@@ -17,10 +17,10 @@ import {state, dispatcher } from '../../app/app.dispatcher';
   // The selector is what angular internally uses
   // for `document.querySelectorAll(selector)` in our index.html
   // where, in this case, selector is the string 'app'
-  //selector: 'launch', // <app></app>
+  // selector: 'launch', // <app></app>
   // We need to tell Angular's compiler which directives are in our template.
   // Doing so will allow Angular to attach our behavior to an element
-  directives: [ROUTER_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
+  directives: [SymbolPickerComponent],
 
   providers: [SECDataService],
   //pipes: [],
@@ -31,62 +31,38 @@ import {state, dispatcher } from '../../app/app.dispatcher';
   styles: [require('./launch.less')]
 })
 export class LaunchComponent implements OnInit {
-  public setTickers: SetTickersAction;
-  public ticker1 = new FormControl('MSFT');
-  public ticker2: FormControl = new FormControl('AAPL');
-  public symbols = new FormGroup({
-      ticker1: this.ticker1,
-      ticker2: this.ticker2
-   });
-  public ticker1Symbols: Observable<Array<Symbol>>;
-  public ticker1Loading: Observable<boolean>;
-  public ticker2Symbols: Observable<Array<Symbol>>;
-  public ticker2Loading: Observable<boolean>;
   public error: string;
-  constructor( @Inject(dispatcher) private dispatcher: Observer<Action>,
+  
+  private autoSelect1 : boolean = true;
+
+  constructor( 
+    @Inject(dispatcher) private dispatcher: Observer<Action>,
     @Inject(state) private state: Observable<AppState>,
     private router: Router,
     private route: ActivatedRoute,
-    public dataService: SECDataService) {
-    this.setTickers = new SetTickersAction(null, null);
-  }
+    private secService: SECDataService) { }
 
   ngOnInit() {
-    var ticker1changes = Observable.merge(
-      Observable.from([this.ticker1.value]), 
-      this.ticker1.valueChanges.debounceTime(200).distinctUntilChanged())
-      .share();
+    // set default symbols
+    this.state.take(1).subscribe(currentState => {
+      if (!currentState.compare.symbol1) {
+        this.secService.getSymbol('MSFT').subscribe(sym => this.onSelection(1, sym));
+      }
 
-    this.ticker1Symbols = ticker1changes.switchMap(term => {
-                    console.log('ticker1 value change: ' + term);
-                    return this.dataService.searchSymbols(term)
-                    .catch((err, obs) => Observable.from([[ <Symbol>{ Symbol: 'no data'}]]));
-                  }).share();
-
-	  this.ticker1Loading = Observable.merge(ticker1changes.map(() => true), this.ticker1Symbols.map(() => false));
-
-    var ticker2changes = Observable.merge(
-      Observable.from([this.ticker2.value]), 
-      this.ticker2.valueChanges.debounceTime(200).distinctUntilChanged())
-      .share();
-
-    this.ticker2Symbols = ticker2changes.switchMap(term => {
-                    console.log('ticker2 value change: ' + term);
-                    return this.dataService.searchSymbols(term)
-                    .catch((err, obs) => Observable.from([[ <Symbol>{ Symbol: 'no data'}]]));
-                  }).share();
-
-	  this.ticker2Loading = Observable.merge(ticker2changes.map(() => true), this.ticker2Symbols.map(() => false));
+      if (!currentState.compare.symbol2) {
+        this.secService.getSymbol('AAPL').subscribe(sym => this.onSelection(2, sym));
+      }
+    });
   }
 
   get compare() { return this.state.map(s => s.compare); }
 
-  emitSetTicker() {
-    this.dispatcher.next(this.setTickers);
+  onSelection(index: number, evt: Symbol) {
+    this.dispatcher.next(new SetSymbolAction(index, evt));
+  }
 
+  compareSymbols() {
     // Pass along the hero id if available
-    // so that the HeroList component can select that hero.
-    // Add a totally useless `foo` parameter for kicks.
     this.router.navigate(['/compare']);
   }
 }
