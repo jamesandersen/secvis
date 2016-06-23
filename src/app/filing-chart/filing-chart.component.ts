@@ -5,30 +5,52 @@ import {Component, OnInit, Input, trigger,
   animate} from '@angular/core';
 import { Filing } from '../model/filing';
 
-/*
- * App Component
- * Top Level Component
- */
 @Component({
-  // The selector is what angular internally uses
-  // for `document.querySelectorAll(selector)` in our index.html
-  // where, in this case, selector is the string 'app'
-  selector: 'filing-chart', // <app></app>
-  // We need to tell Angular's compiler which directives are in our template.
-  // Doing so will allow Angular to attach our behavior to an element
+  selector: 'filing-chart',
   directives: [ ],
-  
   pipes: [],
-  // Our list of styles in our component. We may add more to compose many styles together
   styles: [require('./filing-chart.less')],
-  // Every Angular template is first compiled by the browser before Angular runs it's compiler
   template: `
     <div class="chart" @chartStateTrigger="chartState">
         Filing Chart {{filing?.TradingSymbol}}
         <div>Document Type: {{filing?.DocumentType}}</div>
         <div>Period End: {{filing?.DocumentPeriodEndDate}}</div>
-        <div>Revenues: {{filing?.Revenues}}</div>
+        <br>
+        <div class="rollup credit">Revenues: {{filing?.Revenues}}</div>
+        <div class="debit indent1">Cost of Revenue: {{filing?.CostOfRevenue}}</div>
+        <div class="debit indent1">Operating Expenses: {{filing?.OperatingExpenses}}</div>
+        <div class="debit rollup">Costs and Expenses: {{filing?.CostsAndExpenses}}</div>
+        <div class="credit">Other operating income: {{filing?.OtherOperatingIncome}}</div>
+        <div class="debit">Operating Income: {{filing?.OperatingIncomeLoss}}</div>
+        <br/>
+        <div class="rollup credit">Non-operating income: {{filing?.NonoperatingIncomeLoss}}</div>
+        <div class="debit indent1">Interest And Debt Expense: {{filing?.InterestAndDebtExpense}}</div>
+        <div class="credit rollup">Income (Loss) from Continuing Operations Before Tax: {{filing?.IncomeFromContinuingOperationsBeforeTax}}</div>
+        <br/>
+
+        <div class="rollup credit">Income Tax Expense (Benefit): {{filing?.IncomeTaxExpenseBenefit}}</div>
+        <div class="debit indent1">Income (Loss) from Continuing Operations After Tax: {{filing?.IncomeFromContinuingOperationsAfterTax}}</div>
+        <div class="credit indent1">Income (Loss) from Discontinued Operations, Net of Tax: {{filing?.IncomeFromDiscontinuedOperations}}</div>
+        <div class="credit rollup">Extraordinary Items of Income (Expense), Net of Tax: {{filing?.ExtraordaryItemsGainLoss}}</div>
+        <div class="credit rollup">Net Income (Loss): {{filing?.NetIncomeLoss}}</div>
+        
+        <br/>
         <button (click)="toggleChartState()">Toggle State</button>
+        <div>
+          <svg viewBox="0 0 32 32">
+            <circle r="16" cx="16" cy="16" />
+          </svg>
+        </div>
+        <div class="container">
+          <div class="container-chart">
+            <div class="container-semicircle">
+              <div class="semicircle large"></div>
+              <div class="semicircle mid"></div>
+              <div class="semicircle small"></div>
+            </div>
+          </div>
+        </div>
+        
     </div>
   `,
   animations: [

@@ -25,6 +25,8 @@ import {Action, SetFilingAction} from '../model/Actions';
       <filing-chart [filing]="(compare | async).filing1"></filing-chart>
     </div>
     <div [hidden]="(loading1 | async) === false || false" class="loader">Loading...</div>
+  </div>
+  <div class="compare">
     <div [hidden]="(loading2 | async)">
       <filing-chart [filing]="(compare | async).filing2"></filing-chart>
     </div>
