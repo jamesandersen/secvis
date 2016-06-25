@@ -22,13 +22,17 @@ import {Action, SetFilingAction} from '../model/Actions';
   template: `
   <div class="compare">
     <div [hidden]="(loading1 | async)">
-      <filing-chart [filing]="(compare | async).filing1"></filing-chart>
+      <filing-chart 
+        [filing]="(compare | async).filing1" 
+        [maxValue]="(maxValue | async)"></filing-chart>
     </div>
     <div [hidden]="(loading1 | async) === false || false" class="loader">Loading...</div>
   </div>
   <div class="compare">
     <div [hidden]="(loading2 | async)">
-      <filing-chart [filing]="(compare | async).filing2"></filing-chart>
+      <filing-chart 
+        [filing]="(compare | async).filing2" 
+        [maxValue]="(maxValue | async)"></filing-chart>
     </div>
     <div [hidden]="(loading2 | async) === false || false" class="loader">Loading...</div>
   </div>
@@ -37,6 +41,8 @@ import {Action, SetFilingAction} from '../model/Actions';
 export class CompareComponent implements OnInit, OnDestroy {
    public loading1 = new BehaviorSubject<boolean>(false);
    public loading2 = new BehaviorSubject<boolean>(false);
+
+   public maxValue = new Observable<number>();
 
    private subscriptions : Subscription[] = [];
 
@@ -55,6 +61,14 @@ export class CompareComponent implements OnInit, OnDestroy {
       this.state.map(state => { return { symbol: state.compare.symbol2, filing: state.compare.filing2}; })
       .combineLatest(this.loading2)
       .subscribe(state => { this.setFiling(state, this.loading2); }));
+
+    this.maxValue = this.state.map(state => {
+      return state.compare && (state.compare.filing1 || state.compare.filing2)
+        ? Math.max(
+          state.compare.filing1 ? state.compare.filing1.Revenues : 0,
+          state.compare.filing2 ? state.compare.filing2.Revenues : 0)
+        : 0;
+    });
   }
 
   ngOnDestroy() {
