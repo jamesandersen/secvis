@@ -1,3 +1,5 @@
+// see http://www.xbrlsite.com/2015/fro/us-gaap/html/ReportFrames/fac_ModelStructure.html
+
 export interface Filing {
     EntityRegistrantName : string; // 3D SYSTEMS CORP
     CurrentFiscalYearEndDate : string; // --12-31

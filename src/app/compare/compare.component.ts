@@ -1,64 +1,96 @@
-import {Component, OnInit, Inject} from '@angular/core';
-import {FORM_DIRECTIVES} from '@angular/common';
+import {Component, OnInit, Inject, OnDestroy} from '@angular/core';
 import {ROUTER_DIRECTIVES} from '@angular/router';
 import {SECDataService} from '../secdata/secdata';
 import {FilingChartComponent} from '../filing-chart/filing-chart.component';
 import {state, dispatcher } from '../../app/app.dispatcher';
-import {Observable, Observer} from 'rxjs';
+import {Observable, Observer, BehaviorSubject, Subscription} from 'rxjs';
 
 import {AppState} from '../model/AppState';
+import {Filing } from '../model/filing';
 import {Action, SetFilingAction} from '../model/Actions';
 
 /*
- * App Component
- * Top Level Component
+ * Compare Component
+ * Compares filings for two companies
  */
 @Component({
-  // The selector is what angular internally uses
-  // for `document.querySelectorAll(selector)` in our index.html
-  // where, in this case, selector is the string 'app'
-  selector: 'compare', // <app></app>
-  // We need to tell Angular's compiler which directives are in our template.
-  // Doing so will allow Angular to attach our behavior to an element
-  directives: [ FORM_DIRECTIVES, ROUTER_DIRECTIVES, FilingChartComponent ],
-  
+  selector: 'compare',
+  directives: [ ROUTER_DIRECTIVES, FilingChartComponent ],
   providers: [ SECDataService ],
   pipes: [],
-  // Our list of styles in our component. We may add more to compose many styles together
   styles: [require('./compare.less')],
-  // Every Angular template is first compiled by the browser before Angular runs it's compiler
   template: `
-    <div id="startup">
-        Data Vis Here {{(compare | async).filing1?.TradingSymbol}}
-        <div>Document Type: {{(compare | async).filing1?.DocumentType}}</div>
-        <div>Period End: {{(compare | async).filing1?.DocumentPeriodEndDate}}</div>
-        <div>Revenues: {{(compare | async).filing1?.Revenues}}</div>
-
-        <filing-chart [filing]="(compare | async).filing1"></filing-chart> 
-        Chart?
+  <div class="compare">
+    <div [hidden]="(loading1 | async)">
+      <filing-chart 
+        [filing]="(compare | async).filing1" 
+        [maxValue]="(maxValue | async)"></filing-chart>
     </div>
+    <div [hidden]="(loading1 | async) === false || false" class="loader">Loading...</div>
+  </div>
+  <div class="compare">
+    <div [hidden]="(loading2 | async)">
+      <filing-chart 
+        [filing]="(compare | async).filing2" 
+        [maxValue]="(maxValue | async)"></filing-chart>
+    </div>
+    <div [hidden]="(loading2 | async) === false || false" class="loader">Loading...</div>
+  </div>
   `
 })
-export class CompareComponent implements OnInit {
-   public ticker: string;
-   
+export class CompareComponent implements OnInit, OnDestroy {
+   public loading1 = new BehaviorSubject<boolean>(false);
+   public loading2 = new BehaviorSubject<boolean>(false);
+
+   public maxValue = new Observable<number>();
+
+   private subscriptions : Subscription[] = [];
+
    constructor(
      @Inject(dispatcher) private dispatcher: Observer<Action>,
      @Inject(state) private state: Observable<AppState>,
-    public dataService: SECDataService) {
-    this.ticker = 'MSFT';
-  }
-  
+    public dataService: SECDataService) {}
+
   ngOnInit() {
-    this.dataService.getFiling(this.ticker).subscribe(
-        // onNext callback
-        data => this.dispatcher.next(new SetFilingAction(data.json())),
-        // onError callback
-        err  => this.ticker = err,
-        // onComplete callback
-        ()   => console.log('complete')
-      );
+    this.subscriptions.push(
+      this.state.map(state => { return { symbol: state.compare.symbol1, filing: state.compare.filing1}; })
+      .combineLatest(this.loading1)
+      .subscribe(state => { this.setFiling(state, this.loading1); }));
+
+    this.subscriptions.push(
+      this.state.map(state => { return { symbol: state.compare.symbol2, filing: state.compare.filing2}; })
+      .combineLatest(this.loading2)
+      .subscribe(state => { this.setFiling(state, this.loading2); }));
+
+    this.maxValue = this.state.map(state => {
+      return state.compare && (state.compare.filing1 || state.compare.filing2)
+        ? Math.max(
+          state.compare.filing1 ? state.compare.filing1.Revenues : 0,
+          state.compare.filing2 ? state.compare.filing2.Revenues : 0)
+        : 0;
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   get compare() { return this.state.map(s => s.compare); }
+
+  private setFiling(symbolState : any, loading : BehaviorSubject<boolean>) : Subscription {
+    if (!symbolState[1] && // not already loading
+        symbolState[0].symbol && // has a symbol
+        (!symbolState[0].filing || symbolState[0].symbol.Symbol !== symbolState[0].filing.TradingSymbol)) {
+
+      loading.next(true);
+      return this.dataService.getFiling(symbolState[0].symbol.Symbol)
+              .map(data => new SetFilingAction(data)).take(1)
+              .subscribe(action => {
+                this.dispatcher.next(action);
+                loading.next(false); // don't end loading state until the AppState has been updated
+              });
+    }
+
+    return null;
+  }
 }

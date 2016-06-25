@@ -58,25 +58,20 @@ export class SymbolPickerComponent implements OnInit, OnChanges {
   ngOnInit() {
 
     // merge initial value with subsequent changes into stream
-    var tickerChanges = this.tickerControl.valueChanges
-                            .filter(txt => !this.updatingSelectedSymbol)
-                            .debounceTime(200)
-                            .distinctUntilChanged()
-                            .share();
-
-    // for each ticker value change, fetch the matching symbol values
-    this.tickerSymbols = Observable.merge(
-      // seed the observable with an initial value 
-      this.symbolsSubject,
-      tickerChanges
+    var symbolChangesByUserEntry = this.tickerControl.valueChanges
+        .filter(txt => !this.updatingSelectedSymbol)
+        .debounceTime(200)
+        .distinctUntilChanged()
         .switchMap(term => {
           console.log('ticker value change: ' + term);
           this.loading.next(true);
           return this.dataService.searchSymbols(term)
                   .catch((err, obs) => Observable.from([[ <Symbol>{ Name: `no data matches ${term}`}]]));
         })
-        .do(val => this.loading.next(false))
-    ).share();
+        .do(val => this.loading.next(false));
+
+    // for each ticker value change, fetch the matching symbol values
+    this.tickerSymbols = Observable.merge(this.symbolsSubject, symbolChangesByUserEntry).share();
   }
 
   ngOnChanges(changes: SimpleChanges) {
