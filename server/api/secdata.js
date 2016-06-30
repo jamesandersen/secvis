@@ -9,13 +9,6 @@ var MongoClient = require('mongodb').MongoClient
 // Connection URL
 var url = process.env.MONGO_URL || 'mongodb://localhost:27017/secdata';
 
-
-
-// middleware that is specific to this router
-router.use(function timeLog(req, res, next) {
-  console.log('Time: ', Date.now());
-  next();
-});
 // define the home page route
 router.get('/', function (req, res) {
   res.json({ message: 'hooray! welcome to our api!' });
@@ -60,7 +53,6 @@ router.get('/:ticker/symbol', function (req, res, next) {
     // Peform a simple find and return all the documents
     let docs = yield collection.find({ 'Symbol': req.params.ticker }).limit(1).toArray();
 
-
     // Close db
     yield db.close();
 
@@ -88,7 +80,6 @@ router.get('/:ticker/filing', function (req, res, next) {
     let docs = yield collection.find({ 'TradingSymbol': req.params.ticker, "DocumentType": filingType })
       .sort({ dateFiled: -1 }).limit(1).toArray();
 
-
     // Close db
     yield db.close();
 
@@ -104,11 +95,6 @@ router.get('/:ticker/filing', function (req, res, next) {
     console.error(err.stack);
     res.status(500).json(err);
   });
-});
-
-// define the about route
-router.get('/about', function (req, res) {
-  res.send('About birds');
 });
 
 module.exports = router;

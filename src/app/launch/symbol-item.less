@@ -1,13 +1,15 @@
+@import "../variables.less";
 .symbol-item {
     text-align: center;
     border: transparent solid 2px;
     margin: 5px;
     box-shadow: 2px 2px 2px gray;
+    transition: 0.5s box-shadow,transform ease-in-out;
 
     &.selected {
-        border-left-color: white;
         color: white;
-        background-color: green;
+        background-color: @color_accent_1;
+        box-shadow: 3px 3px 5px gray;
         .exchange { color: white; }
         //svg.check { display: block; color: white; }
     }

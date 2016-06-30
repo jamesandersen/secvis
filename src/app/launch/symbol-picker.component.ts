@@ -28,7 +28,7 @@ import {SymbolItemComponent} from './symbol-item.component';
   styles: [require('./symbol-picker.less')],
   // Every Angular template is first compiled by the browser before Angular runs it's compiler
   template: `<div class="symbol" [formGroup]="symbolForm">
-      <input type="text" name="ticker" required formControlName="ticker">
+      <input type="text" name="ticker" required formControlName="ticker" [placeholder]="placeholder">
       <ul [hidden]="loading | async">
         <symbol-item *ngFor="let symbol of tickerSymbols | async" (click)="onSelection(symbol)"
           [symbol]="symbol"
@@ -40,6 +40,7 @@ import {SymbolItemComponent} from './symbol-item.component';
 })
 export class SymbolPickerComponent implements OnInit, OnChanges {
   @Input() selectedSymbol: Symbol;
+  @Input() placeholder: string;
   @Output() symbolSelected = new EventEmitter<Symbol>();
 
   public tickerControl = new FormControl();

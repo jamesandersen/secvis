@@ -31,11 +31,10 @@ import {Symbol} from '../model/symbol';
   animations: [
     trigger('itemStateTrigger', [
       state('default', style({
-        backgroundColor: '#eee',
-        transform: 'scale(1)'
+        backgroundColor: '#eee'
       })),
       state('selected',   style({
-        transform: 'scale(1.1)'
+        transform: 'scale(1.05)'
       })),
       state('unselected',   style({
         borderColor: 'gray'
@@ -45,7 +44,7 @@ import {Symbol} from '../model/symbol';
         animate(200)
       ]),
       transition('void => *', [
-        style({transform: 'scale(0.75)', opacity: '0.2'}),
+        style({transform: 'scale(0.95)', opacity: '0.2'}),
         animate(200)
       ]),
       transition('* => void', [

@@ -24,6 +24,7 @@ import { Filing } from '../model/filing';
                 [attr.x]="coords.revenues?.x" 
                 [attr.y]="coords.revenues?.y" 
                 fill="#14a918" stroke-width="0"/>
+              
               <rect id="cost_of_revenue" width="8" 
                 [attr.height]="coords.costOfRevenue?.height" 
                 [attr.x]="coords.costOfRevenue?.x" 

@@ -45,9 +45,9 @@ export class LaunchComponent implements OnInit {
   ngOnInit() {
     // set default symbols
     this.state.take(1).subscribe(currentState => {
-      if (!currentState.compare.symbol1) {
+      /*if (!currentState.compare.symbol1) {
         this.secService.getSymbol('MSFT').subscribe(sym => this.onSelection(1, sym));
-      }
+      }*/
 
       if (!currentState.compare.symbol2) {
         this.secService.getSymbol('AAPL').subscribe(sym => this.onSelection(2, sym));
@@ -56,6 +56,7 @@ export class LaunchComponent implements OnInit {
   }
 
   get compare() { return this.state.map(s => s.compare); }
+  get canCompare() { return this.state.map(s => !!(s.compare.symbol1 && s.compare.symbol2)); }
 
   onSelection(index: number, evt: Symbol) {
     this.dispatcher.next(new SetSymbolAction(index, evt));
