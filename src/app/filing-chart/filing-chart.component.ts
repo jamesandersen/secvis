@@ -2,7 +2,7 @@ import {Component, OnInit, OnChanges, SimpleChanges, Input, trigger,
   state,
   style,
   transition,
-  animate} from '@angular/core';
+  animate } from '@angular/core';
 import { Filing } from '../model/filing';
 
 @Component({
@@ -20,54 +20,54 @@ import { Filing } from '../model/filing';
           <svg xmlns="http://www.w3.org/2000/svg" id="svg2" viewBox="0 0 100 100">
             <g id="layer1" >
               <rect id="revenues" width="8" 
-                [attr.height]="coords.revenuesHeight" 
-                x="0" 
-                [attr.y]="coords.revenuesY" 
+                [attr.height]="coords.revenues?.height" 
+                [attr.x]="coords.revenues?.x" 
+                [attr.y]="coords.revenues?.y" 
                 fill="#14a918" stroke-width="0"/>
               <rect id="cost_of_revenue" width="8" 
-                [attr.height]="coords.costOfRevenueHeight" 
-                x="10"
-                [attr.y]="coords.costOfRevenueY" 
+                [attr.height]="coords.costOfRevenue?.height" 
+                [attr.x]="coords.costOfRevenue?.x" 
+                [attr.y]="coords.costOfRevenue?.y" 
                 fill="#ce3100" stroke="#000" stroke-width="0"/>
               <rect id="operating_expenses" width="8" 
-                [attr.height]="coords.operatingExpensesHeight" 
-                x="20" 
-                [attr.y]="coords.operatingExpensesY" 
+                [attr.height]="coords.operatingExpenses?.height" 
+                [attr.x]="coords.operatingExpenses?.x" 
+                [attr.y]="coords.operatingExpenses?.y" 
                 fill="#ce3100" 
                 stroke="#000" stroke-width="0"/>
               <rect id="other_operating_income" width="8" 
-                [attr.height]="coords.otherOperatingIncomeHeight" 
-                x="30" 
-                [attr.y]="coords.otherOperatingIncomeY" 
+                [attr.height]="coords.otherOperatingIncome?.height" 
+                [attr.x]="coords.otherOperatingIncome?.x" 
+                [attr.y]="coords.otherOperatingIncome?.y" 
                 fill="#14a918" stroke="#000" stroke-width="0"/>
               <rect id="non_operating_income" width="8" 
-                [attr.height]="coords.nonoperatingIncomeLossHeight" 
-                x="40"
-                [attr.y]="coords.nonoperatingIncomeLossY"
+                [attr.height]="coords.nonoperatingIncomeLoss?.height" 
+                [attr.x]="coords.nonoperatingIncomeLoss?.x"
+                [attr.y]="coords.nonoperatingIncomeLoss?.y"
                 fill="#14a918" 
                 stroke="#000" 
                 stroke-width="0"/>
               <rect id="interest_debt_expense" width="8" 
-                [attr.height]="coords.interestAndDebtExpenseHeight" 
-                x="50" 
-                [attr.y]="coords.interestAndDebtExpenseY" 
+                [attr.height]="coords.interestAndDebtExpense?.height" 
+                [attr.x]="coords.interestAndDebtExpense?.x" 
+                [attr.y]="coords.interestAndDebtExpense?.y" 
                 fill="#ce3100" 
                 stroke="#000" stroke-width=".058"/>
               <rect id="tax_expense" width="7.883" 
-                [attr.height]="coords.incomeTaxExpenseBenefitHeight" 
-                x="60" 
-                [attr.y]="coords.incomeTaxExpenseBenefitY"
+                [attr.height]="coords.incomeTaxExpenseBenefit?.height" 
+                [attr.x]="coords.incomeTaxExpenseBenefit?.x"
+                [attr.y]="coords.incomeTaxExpenseBenefit?.y"
                 fill="#ce3100" stroke="#000" stroke-width="0"/>
               <rect id="discontinued_operations" width="7.934" 
-                [attr.height]="coords.incomeFromDiscontinuedOperationsHeight" 
-                x="70" 
-                [attr.y]="coords.incomeFromDiscontinuedOperationsY"
+                [attr.height]="coords.incomeFromDiscontinuedOperations?.height" 
+                [attr.x]="coords.incomeFromDiscontinuedOperations?.x"
+                [attr.y]="coords.incomeFromDiscontinuedOperations?.y"
                 fill="#ce3100" 
                 stroke="#000" stroke-width="0"/>
               <rect id="extraordinary_items" width="7.941" 
-                [attr.height]="coords.extraordaryItemsGainLossHeight" 
-                x="80" 
-                [attr.y]="coords.extraordaryItemsGainLossY"
+                [attr.height]="coords.extraordaryItemsGainLoss?.height" 
+                [attr.x]="coords.extraordaryItemsGainLoss?.x"
+                [attr.y]="coords.extraordaryItemsGainLoss?.y"
                 fill="#ce3100" stroke="#000" stroke-width="0"/>
             </g>
           </svg>
@@ -132,7 +132,7 @@ export class FilingChartComponent implements OnInit, OnChanges {
    public coords: any = {};
 
   ngOnInit() {
-    
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -153,41 +153,36 @@ export class FilingChartComponent implements OnInit, OnChanges {
   }
 
   getFilingChartCoordinates= () => {
-    var coords : any = { revenuesHeight: Math.abs(this.pixelValue(this.filing.Revenues)) };
-    var lastY = 100 - coords.revenuesHeight;
-    coords.revenuesY = lastY;
+    var firstCoord = { x: 0, y: 100, height: 0, down: false }; // start in top left of chart
+    var coords : any = { };
 
-    coords.costOfRevenueHeight = Math.abs(this.pixelValue(this.filing.CostOfRevenue));
-    coords.costOfRevenueY = lastY;
-    lastY += coords.costOfRevenueHeight;
+    var buildCoord : any = (lastCoord: any, value: number, isCredit: boolean) => {
 
-    coords.operatingExpensesHeight = Math.abs(this.pixelValue(this.filing.OperatingExpenses));
-    coords.operatingExpensesY = lastY;
-    lastY += coords.operatingExpensesHeight;
+      // set the height by adjusting the raw $ value to chart scale
+      var height = Math.abs(this.pixelValue(value));
 
-    coords.otherOperatingIncomeHeight = Math.abs(this.pixelValue(this.filing.OtherOperatingIncome));
-    coords.otherOperatingIncomeY = lastY;
-    lastY += coords.otherOperatingIncomeHeight;
+      // if there is a value move x over to the right, otherwise keep it the same
+      var x = value !== 0 ? lastCoord.x + 10 : lastCoord.x;
 
-    coords.nonoperatingIncomeLossHeight = Math.abs(this.pixelValue(this.filing.NonoperatingIncomeLoss));
-    coords.nonoperatingIncomeLossY = lastY;
-    lastY += coords.nonoperatingIncomeLossHeight;
+      // y is based on the height of the value but also whether value is + or - AND credit or debit
+      // a positive debit OR negative credit takes us DOWN the y-axis while
+      // a negative debit OR positive credit takes us UP the y-axis
+      var down = (value > 0 ? true : false) && (isCredit ? false : true );
+      var lastCoordStartY = lastCoord.y + (lastCoord.down ? lastCoord.height : 0);
+      var y = lastCoordStartY - (down ? 0 : height);
 
-    coords.interestAndDebtExpenseHeight = Math.abs(this.pixelValue(this.filing.InterestAndDebtExpense));
-    coords.interestAndDebtExpenseY = lastY;
-    lastY += coords.interestAndDebtExpenseHeight;
-
-    coords.incomeTaxExpenseBenefitHeight = Math.abs(this.pixelValue(this.filing.IncomeTaxExpenseBenefit));
-    coords.incomeTaxExpenseBenefitY = lastY;
-    lastY += coords.incomeTaxExpenseBenefitHeight;
-
-    coords.incomeFromDiscontinuedOperationsHeight = Math.abs(this.pixelValue(this.filing.IncomeFromDiscontinuedOperations));
-    coords.incomeFromDiscontinuedOperationsY = lastY;
-    lastY += coords.incomeFromDiscontinuedOperationsHeight;
-
-    coords.extraordaryItemsGainLossHeight = Math.abs(this.pixelValue(this.filing.ExtraordaryItemsGainLoss));
-    coords.extraordaryItemsGainLossY = lastY;
-    lastY += coords.extraordaryItemsGainLossHeight;
+      console.log(`height: ${height}, x: ${x}, y: ${y}, down: ${down}`);
+      return { height: height, x: x, y: y, down: down };
+    }
+    coords.revenues = buildCoord(firstCoord, this.filing.Revenues, true);
+    coords.costOfRevenue = buildCoord(coords.revenues, this.filing.CostOfRevenue, false);
+    coords.operatingExpenses = buildCoord(coords.costOfRevenue, this.filing.OperatingExpenses, false);
+    coords.otherOperatingIncome = buildCoord(coords.operatingExpenses, this.filing.OtherOperatingIncome, true);
+    coords.nonoperatingIncomeLoss = buildCoord(coords.otherOperatingIncome, this.filing.NonoperatingIncomeLoss, true);
+    coords.interestAndDebtExpense = buildCoord(coords.nonoperatingIncomeLoss, this.filing.InterestAndDebtExpense, false);
+    coords.incomeTaxExpenseBenefit = buildCoord(coords.interestAndDebtExpense, this.filing.IncomeTaxExpenseBenefit, false);
+    coords.incomeFromDiscontinuedOperations = buildCoord(coords.incomeTaxExpenseBenefit, this.filing.IncomeFromDiscontinuedOperations, true);
+    coords.extraordaryItemsGainLoss = buildCoord(coords.incomeFromDiscontinuedOperations, this.filing.ExtraordaryItemsGainLoss, true);
 
     return coords;
   }

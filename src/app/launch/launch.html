@@ -8,6 +8,8 @@
       [selectedSymbol]="(compare | async).symbol2"
       (symbolSelected)="onSelection(2, $event)"></symbol-picker>
   </div>
-  <button class="btn btn-default" (click)="compareSymbols()">Compare</button>
-  <div>{{(compare | async).ticker1}}</div>
+  
+  <div class="btn-container">
+    <button class="btn btn-default" (click)="compareSymbols()">Compare</button>
+  </div>
 </div>
