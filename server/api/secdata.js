@@ -1,18 +1,13 @@
 "use strict";
 
-var express = require('express');
-var router = express.Router();
-var co = require('co');
-var MongoClient = require('mongodb').MongoClient
-  , assert = require('assert');
+var express = require('express'),
+    router = express.Router(),
+    co = require('co'),
+    MongoClient = require('mongodb').MongoClient,
+    assert = require('assert');
 
 // Connection URL
 var url = process.env.MONGO_URL || 'mongodb://localhost:27017/secdata';
-
-// define the home page route
-router.get('/', function (req, res) {
-  res.json({ message: 'hooray! welcome to our api!' });
-});
 
 // define the home page route
 router.get('/symbols/search/:ticker', function (req, res, next) {
@@ -77,8 +72,10 @@ router.get('/:ticker/filing', function (req, res, next) {
     let collection = db.collection("filings");
 
     // Peform a simple find and return all the documents
-    let docs = yield collection.find({ 'TradingSymbol': req.params.ticker, "DocumentType": filingType })
-      .sort({ dateFiled: -1 }).limit(1).toArray();
+    let docs = yield collection
+      .find({ 'TradingSymbol': req.params.ticker, "DocumentType": filingType })
+      .sort({ dateFiled: -1 })
+      .limit(1).toArray();
 
     // Close db
     yield db.close();
